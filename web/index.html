@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document Templating System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>Document Templating System</h1>
+        </div>
+        <div class="actions">
+          <button type="button" id="reloadBtn">Reload</button>
+          <button type="button" id="saveBtn" class="secondary">Save Document</button>
+          <button type="button" id="renderBtn" class="primary">Render HTML</button>
+          <button type="button" id="pdfBtn">Download PDF</button>
+        </div>
+      </header>
+
+      <div class="workspace">
+        <nav class="sidebar" id="sectionNav" aria-label="Document sections">
+          <button type="button" class="tab" data-section="assets">Assets</button>
+        </nav>
+
+        <main class="editor">
+          <div id="status" role="status">Ready</div>
+          <section id="editorRoot" aria-live="polite"></section>
+        </main>
+
+        <aside class="preview">
+          <div class="preview-header">
+            <span>Rendered HTML</span>
+            <button type="button" id="refreshPreviewBtn">Refresh</button>
+          </div>
+          <iframe id="previewFrame" title="Rendered document preview"></iframe>
+        </aside>
+      </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+meta {
+  name: 00 Invalid Document Save
+  type: http
+  seq: 1
+  tags: contract, negative
+}
+
+put {
+  url: {{baseUrl}}/api/document
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "document": {
+      "profile": {}
+    }
+  }
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.status).to.equal(400);
+  });
+
+  test("error explains missing keys", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(false);
+    expect(body.error).to.include("profile.full_name");
+  });
+}

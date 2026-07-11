@@ -1,0 +1,31 @@
+meta {
+  name: 01 Invalid Asset Extension
+  type: http
+  seq: 2
+  tags: contract, negative
+}
+
+post {
+  url: {{baseUrl}}/api/assets
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "filename": "notes.txt",
+    "contentBase64": "aGVsbG8="
+  }
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.status).to.equal(400);
+  });
+
+  test("error explains allowed assets", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(false);
+    expect(body.error).to.include("unsupported asset type");
+  });
+}

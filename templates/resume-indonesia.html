@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{profile.document_title}}</title>
+    <style>{{{style}}}</style>
+  </head>
+  <body>
+    <main class="id-cv">
+      <aside class="sidebar">
+        {{#if profile.photo}}
+        <img class="photo" src="{{profile.photo}}" alt="{{profile.photo_alt}}">
+        {{/if}}
+        <h1>{{profile.full_name}}</h1>
+        <p class="title">{{profile.title}}</p>
+
+        <section>
+          <h2>Contact</h2>
+          {{#if profile.location}}<p>{{profile.location}}</p>{{/if}}
+          {{#if profile.email}}<p>{{profile.email}}</p>{{/if}}
+          {{#if profile.phone}}<p>{{profile.phone}}</p>{{/if}}
+          {{#if profile.linkedin}}<p>{{profile.linkedin}}</p>{{/if}}
+          {{#if profile.portfolio}}<p>{{profile.portfolio}}</p>{{/if}}
+        </section>
+
+        {{#if personal_details}}
+        <section>
+          <h2>Profile Details</h2>
+          {{#each personal_details}}
+          {{#if value}}<p><strong>{{label}}:</strong> {{value}}</p>{{/if}}
+          {{/each}}
+        </section>
+        {{/if}}
+
+        {{#if languages}}
+        <section>
+          <h2>Languages</h2>
+          <ul>{{#each languages}}<li>{{this}}</li>{{/each}}</ul>
+        </section>
+        {{/if}}
+      </aside>
+
+      <article class="content">
+        <p class="doc">{{profile.document_title}}</p>
+
+        {{#if summary}}
+        <section class="summary">
+          <h2>Professional Summary</h2>
+          <p>{{summary}}</p>
+        </section>
+        {{/if}}
+
+        {{#if experience}}
+        <section>
+          <h2>Work Experience</h2>
+          {{#each experience}}
+          <div class="entry">
+            <div class="entry-head">
+              <h3>{{role}}</h3>
+              <span>{{date}}</span>
+            </div>
+            <p class="sub">{{company}}{{#if location}} | {{location}}{{/if}}</p>
+            <ul>{{#each bullets}}<li>{{this}}</li>{{/each}}</ul>
+          </div>
+          {{/each}}
+        </section>
+        {{/if}}
+
+        {{#if skills}}
+        <section>
+          <h2>Skills</h2>
+          <ul class="columns">{{#each skills}}<li>{{this}}</li>{{/each}}</ul>
+        </section>
+        {{/if}}
+
+        {{#if education}}
+        <section>
+          <h2>Education</h2>
+          {{#each education}}
+          <div class="entry">
+            <div class="entry-head">
+              <h3>{{degree}}</h3>
+              <span>{{date}}</span>
+            </div>
+            <p class="sub">{{institution}}{{#if location}} | {{location}}{{/if}}</p>
+          </div>
+          {{/each}}
+        </section>
+        {{/if}}
+
+        {{#if projects}}
+        <section>
+          <h2>Projects</h2>
+          {{#each projects}}
+          <div class="entry">
+            <h3>{{name}}</h3>
+            {{#if url}}<p class="sub">{{url}}</p>{{/if}}
+            <p>{{description}}</p>
+          </div>
+          {{/each}}
+        </section>
+        {{/if}}
+      </article>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+/target/
+/target-current/
+/tmp/
+/dist/
+/output/
+**/__pycache__/
+*.pyc
+*.pdb
+.env
+.env.*
+document-templating-system.config.json
+outputs/
+examples/workspace/backups/
+examples/workspace/outputs/
+examples/workspace/renders/

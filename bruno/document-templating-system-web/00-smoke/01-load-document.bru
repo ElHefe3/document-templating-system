@@ -1,0 +1,26 @@
+meta {
+  name: 01 Load Document
+  type: http
+  seq: 2
+  tags: smoke, contract
+}
+
+get {
+  url: {{baseUrl}}/api/document
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("document has required shape", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(true);
+    expect(body.document.profile.full_name).to.be.a("string").and.not.empty;
+    expect(body.document.experience).to.be.an("array");
+    expect(body.document.sidebar.skills).to.be.an("array");
+  });
+}

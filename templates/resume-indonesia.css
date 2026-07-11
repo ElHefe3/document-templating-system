@@ -1,0 +1,169 @@
+body {
+  background: #ffffff;
+  color: #17212b;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.42;
+  margin: 18px auto;
+  max-width: 940px;
+  padding: 0 20px 28px;
+}
+
+.id-cv {
+  display: table;
+  min-height: 900px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.sidebar {
+  background: #123c35;
+  color: #ffffff;
+  display: table-cell;
+  padding: 24px 20px;
+  vertical-align: top;
+  width: 270px;
+}
+
+.photo {
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  height: 132px;
+  object-fit: cover;
+  width: 132px;
+}
+
+h1 {
+  font-size: 26px;
+  line-height: 1.1;
+  margin: 16px 0 4px;
+}
+
+.title {
+  color: #b7e4d2;
+  font-size: 14px;
+  margin: 0 0 18px;
+}
+
+.sidebar section {
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+  margin-top: 16px;
+  padding-top: 12px;
+}
+
+.sidebar h2 {
+  color: #d9f99d;
+}
+
+.sidebar p,
+.sidebar li {
+  color: #eef7f2;
+}
+
+.content {
+  display: table-cell;
+  padding: 24px 28px;
+  vertical-align: top;
+}
+
+.doc {
+  color: #52796f;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+}
+
+section {
+  margin: 0 0 18px;
+}
+
+h2 {
+  color: #123c35;
+  font-size: 14px;
+  margin: 0 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #cad2c5;
+}
+
+h3 {
+  font-size: 13px;
+  margin: 0;
+}
+
+p {
+  margin: 4px 0;
+}
+
+.summary {
+  background: #f4f9f6;
+  padding: 10px 12px;
+}
+
+.entry {
+  margin-bottom: 11px;
+}
+
+.entry-head {
+  align-items: baseline;
+  overflow: hidden;
+}
+
+.entry-head h3 {
+  display: inline;
+}
+
+.entry-head span {
+  float: right;
+  margin-left: 12px;
+}
+
+.entry-head span,
+.sub {
+  color: #64748b;
+}
+
+ul {
+  margin: 4px 0 0;
+  padding-left: 17px;
+}
+
+li {
+  margin-bottom: 3px;
+}
+
+.columns {
+  list-style-position: outside;
+}
+
+.columns li {
+  display: inline-block;
+  margin-right: 3%;
+  vertical-align: top;
+  width: 46%;
+}
+
+@media screen and (max-width: 720px) {
+  body {
+    margin: 0;
+    max-width: none;
+    padding: 0;
+    font-size: 14px;
+  }
+
+  .id-cv {
+    display: block;
+  }
+
+  .content {
+    padding: 18px;
+  }
+
+  .entry-head {
+    display: block;
+  }
+
+  .columns {
+    columns: 1;
+  }
+}

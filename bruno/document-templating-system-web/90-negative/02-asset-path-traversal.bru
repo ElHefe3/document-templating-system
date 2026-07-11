@@ -1,0 +1,31 @@
+meta {
+  name: 02 Asset Path Traversal
+  type: http
+  seq: 3
+  tags: contract, negative
+}
+
+post {
+  url: {{baseUrl}}/api/assets
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "filename": "../bad.png",
+    "contentBase64": "aGVsbG8="
+  }
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.status).to.equal(400);
+  });
+
+  test("error rejects path segments", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(false);
+    expect(body.error).to.include("path segments");
+  });
+}

@@ -1,0 +1,24 @@
+meta {
+  name: 01 Download PDF
+  type: http
+  seq: 2
+  tags: smoke, contract
+}
+
+post {
+  url: {{baseUrl}}/api/render/pdf
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("pdf response is an attachment", function () {
+    expect(res.getHeader("content-type")).to.include("application/pdf");
+    expect(res.getHeader("content-disposition")).to.include("attachment");
+    expect(res.getHeader("content-disposition")).to.include("resume.pdf");
+  });
+}

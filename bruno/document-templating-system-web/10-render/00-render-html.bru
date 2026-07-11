@@ -1,0 +1,25 @@
+meta {
+  name: 00 Render HTML
+  type: http
+  seq: 1
+  tags: smoke, contract
+}
+
+post {
+  url: {{baseUrl}}/api/render/html
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("render result points at preview", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(true);
+    expect(body.path).to.equal("renders/document.html");
+    expect(body.previewUrl).to.equal("/renders/document.html");
+  });
+}

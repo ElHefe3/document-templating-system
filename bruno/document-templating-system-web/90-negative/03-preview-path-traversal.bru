@@ -1,0 +1,24 @@
+meta {
+  name: 03 Preview Path Traversal
+  type: http
+  seq: 4
+  tags: contract, negative
+}
+
+get {
+  url: {{baseUrl}}/renders/%2e%2e/document.json
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 404", function () {
+    expect(res.status).to.equal(404);
+  });
+
+  test("error is not found", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(false);
+    expect(body.error).to.include("file not found");
+  });
+}

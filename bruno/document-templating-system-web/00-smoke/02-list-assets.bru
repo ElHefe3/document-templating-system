@@ -1,0 +1,24 @@
+meta {
+  name: 02 List Assets
+  type: http
+  seq: 3
+  tags: smoke, contract
+}
+
+get {
+  url: {{baseUrl}}/api/assets
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("assets response has array shape", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(true);
+    expect(body.assets).to.be.an("array");
+  });
+}

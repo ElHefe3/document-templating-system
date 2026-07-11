@@ -1,0 +1,32 @@
+meta {
+  name: 00 Upload Asset
+  type: http
+  seq: 1
+  tags: contract, destructive
+}
+
+post {
+  url: {{baseUrl}}/api/assets
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "filename": "bruno-upload.svg",
+    "contentBase64": "PHN2ZyB3aWR0aD0iMSIgaGVpZ2h0PSIxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDgwODAiLz48L3N2Zz4="
+  }
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("asset upload returns safe asset metadata", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(true);
+    expect(body.asset.name).to.match(/^bruno-upload(?:-\d+)?\.svg$/);
+    expect(body.asset.path).to.match(/^\.\/assets\/bruno-upload(?:-\d+)?\.svg$/);
+  });
+}

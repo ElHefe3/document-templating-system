@@ -1,0 +1,160 @@
+body {
+  font-family: "Calibri", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background-color: #fff;
+  color: #222;
+  margin: 20px auto;
+  padding: 0;
+  max-width: 1000px;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.container {
+  display: table;
+  width: 100%;
+}
+
+.left,
+.right {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.left {
+  width: 30%;
+  padding-right: 10px;
+}
+
+.right {
+  width: 70%;
+  padding-left: 10px;
+}
+
+h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+h2 {
+  font-size: 14px;
+  color: #4a4a4a;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 2px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+h3 {
+  font-size: 12px;
+  color: #222;
+  margin: 8px 0 4px;
+}
+
+.date {
+  float: right;
+  font-style: italic;
+  color: #666;
+}
+
+p,
+li {
+  margin: 4px 0;
+}
+
+ul {
+  padding-left: 16px;
+  margin: 4px 0 10px;
+}
+
+a {
+  color: #3c6e71;
+  text-decoration: none;
+}
+
+img#photo {
+  width: 70%;
+  border-radius: 8px;
+}
+
+.icon-container {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 6px;
+}
+
+.icon-container .icon {
+  vertical-align: middle;
+  width: 1rem;
+  margin-right: 0.3rem;
+}
+
+.icon-container p {
+  display: inline;
+  vertical-align: middle;
+  margin: 0;
+}
+
+@media screen and (max-width: 720px) {
+  body {
+    margin: 0;
+    padding: 16px;
+    max-width: none;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .left,
+  .right {
+    display: block;
+    width: auto;
+    padding: 0;
+  }
+
+  .right {
+    order: 1;
+  }
+
+  .left {
+    order: 2;
+  }
+
+  h1 {
+    font-size: 28px;
+    line-height: 1.15;
+    margin-top: 0;
+  }
+
+  .date {
+    display: block;
+    float: none;
+    margin-top: 2px;
+  }
+
+  .img-container {
+    margin-top: 24px;
+    text-align: center;
+  }
+
+  img#photo {
+    width: 180px;
+    max-width: 60%;
+  }
+
+  .icon-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .icon-container p {
+    display: block;
+    overflow-wrap: anywhere;
+  }
+}

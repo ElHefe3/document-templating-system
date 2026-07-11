@@ -1,0 +1,184 @@
+body {
+  background: #ffffff;
+  color: #17202a;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.42;
+  margin: 18px auto;
+  max-width: 940px;
+  padding: 0 20px 28px;
+}
+
+.nl-cv {
+  border-top: 7px solid #f97316;
+}
+
+.hero {
+  align-items: flex-end;
+  display: table;
+  padding: 18px 0 16px;
+  width: 100%;
+}
+
+.hero > div {
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.hero > div:first-child {
+  width: 55%;
+}
+
+.doc {
+  color: #64748b;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  margin: 0 0 4px;
+  text-transform: uppercase;
+}
+
+h1 {
+  color: #0f172a;
+  font-size: 31px;
+  line-height: 1.05;
+  margin: 0;
+}
+
+.headline {
+  color: #334155;
+  font-size: 15px;
+  margin: 6px 0 0;
+}
+
+.contact {
+  color: #334155;
+  display: block;
+  text-align: right;
+}
+
+.contact span {
+  display: inline-block;
+  margin: 0 0 5px 12px;
+}
+
+.profile {
+  background: #fff7ed;
+  border-left: 4px solid #f97316;
+  padding: 10px 12px;
+}
+
+.body-grid {
+  display: table;
+  margin-top: 18px;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.body-grid > article,
+.body-grid > aside {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.body-grid > article {
+  padding-right: 28px;
+  width: auto;
+}
+
+.body-grid > aside {
+  width: 260px;
+}
+
+section {
+  margin: 0 0 18px;
+}
+
+h2 {
+  color: #0f172a;
+  font-size: 14px;
+  margin: 0 0 8px;
+}
+
+h3 {
+  font-size: 13px;
+  margin: 0;
+}
+
+p {
+  margin: 4px 0;
+}
+
+.entry {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 11px;
+  padding-bottom: 9px;
+}
+
+.entry.compact {
+  border-bottom: 0;
+}
+
+.entry-head {
+  align-items: baseline;
+  overflow: hidden;
+}
+
+.entry-head h3 {
+  display: inline;
+}
+
+.entry-head span {
+  float: right;
+  margin-left: 12px;
+}
+
+.entry-head span,
+.sub {
+  color: #64748b;
+}
+
+ul {
+  margin: 4px 0 0;
+  padding-left: 17px;
+}
+
+li {
+  margin-bottom: 3px;
+}
+
+.tags {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tags li {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+  margin: 0 4px 6px 0;
+  padding: 3px 7px;
+}
+
+@media screen and (max-width: 720px) {
+  body {
+    margin: 0;
+    max-width: none;
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .hero,
+  .body-grid {
+    display: block;
+  }
+
+  .contact {
+    justify-content: flex-start;
+    margin-top: 10px;
+    text-align: left;
+  }
+
+  .entry-head {
+    display: block;
+  }
+}

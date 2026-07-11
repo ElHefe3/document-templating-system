@@ -1,0 +1,24 @@
+meta {
+  name: 04 List Templates
+  type: http
+  seq: 5
+  tags: smoke, contract
+}
+
+get {
+  url: {{baseUrl}}/api/templates
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("classic template is available", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(true);
+    expect(body.templates.some((template) => template.id === "classic-resume")).to.equal(true);
+  });
+}

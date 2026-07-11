@@ -1,0 +1,25 @@
+meta {
+  name: 03 Load Template
+  type: http
+  seq: 4
+  tags: smoke, contract
+}
+
+get {
+  url: {{baseUrl}}/api/template
+  body: none
+  auth: none
+}
+
+tests {
+  test("status is 200", function () {
+    expect(res.status).to.equal(200);
+  });
+
+  test("template describes editable sections", function () {
+    const body = res.getBody();
+    expect(body.ok).to.equal(true);
+    expect(body.template.id).to.equal("classic-resume");
+    expect(body.template.sections).to.be.an("array").and.not.empty;
+  });
+}
