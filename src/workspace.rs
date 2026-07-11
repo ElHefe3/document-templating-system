@@ -10,7 +10,7 @@ use serde_json::Value;
 use crate::{
     json_file::{atomic_write_json, read_json},
     model::{TemplateManifest, BUILTIN_CLASSIC_ID, DOCUMENT_FILE, WORKSPACE_MANIFEST},
-    template_catalog::load_template,
+    templates::catalog::load_template,
 };
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

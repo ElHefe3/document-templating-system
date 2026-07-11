@@ -1,0 +1,75 @@
+{
+  "certifications": [],
+  "education": [
+    {
+      "date": "",
+      "degree": "Degree or qualification",
+      "institution": "Institution Name",
+      "location": ""
+    }
+  ],
+  "experience": [
+    {
+      "bullets": [
+        "Describe a measurable result, business impact, or technical improvement.",
+        "Name the technologies, systems, or stakeholders involved.",
+        "Keep each bullet concise and outcome-focused."
+      ],
+      "company": "Company Name",
+      "date": "2024 - Present",
+      "location": "Berlin, Germany",
+      "role": "Software Engineer"
+    }
+  ],
+  "languages": [
+    "English - Professional",
+    "German - Add level"
+  ],
+  "personal_details": [
+    {
+      "label": "Work authorization",
+      "value": "No"
+    },
+    {
+      "label": "Nationality",
+      "value": ""
+    },
+    {
+      "label": "Date of birth",
+      "value": ""
+    },
+    {
+      "label": "Availability",
+      "value": ""
+    }
+  ],
+  "profile": {
+    "country": "Germany",
+    "document_title": "Lebenslauf",
+    "email": "you@example.com",
+    "full_name": "Your Name",
+    "linkedin": "",
+    "location": "Berlin, Germany",
+    "phone": "",
+    "photo": "",
+    "photo_alt": "",
+    "portfolio": "",
+    "title": "Software Engineer"
+  },
+  "projects": [
+    {
+      "description": "Briefly describe the project, your role, and the result.",
+      "name": "Selected Project",
+      "url": ""
+    }
+  ],
+  "skills": [
+    "Backend development",
+    "Distributed systems",
+    "Cloud platforms",
+    "CI/CD",
+    "Databases"
+  ],
+  "summary": "Software engineer with experience building reliable production systems, backend services, and cross-functional delivery.",
+  "template_guidance": "German CVs are commonly reverse chronological and often use a clear tabular structure. A professional photo and personal details are optional and context-dependent; include only what you are comfortable sharing and what fits the employer."
+}

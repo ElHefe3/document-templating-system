@@ -1,14 +1,11 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-pub use crate::builtin_templates::{classic_template, country_resume_template_by_id};
 pub use crate::document_model::{document_summary, validate_document};
-pub use crate::template_catalog::{
+pub use crate::templates::catalog::{
     available_templates, load_template, load_template_from_file, local_template_exists,
 };
-pub use crate::template_manifest_validation::{
-    hydrate_template_render_files, validate_template_manifest,
-};
+pub use crate::templates::manifest_validation::validate_template_manifest;
 pub use crate::workspace::{init_workspace, set_workspace_template_with_manifest, Workspace};
 
 pub const WORKSPACE_MANIFEST: &str = "document-templating-system.json";
@@ -121,6 +118,7 @@ impl TemplateManifest {
 mod tests {
     use super::*;
     use crate::document_model::get_path;
+    use crate::templates::builtin::{classic_template, country_resume_template_by_id};
 
     #[test]
     fn validates_classic_defaults() {

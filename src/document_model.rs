@@ -150,7 +150,7 @@ fn is_blank(value: &Value) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::model::classic_template;
+    use crate::templates::builtin::classic_template;
     use serde_json::json;
 
     #[test]
