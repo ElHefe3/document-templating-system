@@ -4,18 +4,19 @@ use anyhow::{bail, Result};
 
 use crate::{
     model::{document_summary, init_workspace, validate_document, TemplateManifest, Workspace},
-    pdf_renderer, render,
-    template_package::export_template_package,
-    web_server,
+    pdf::renderer as pdf_renderer,
+    render,
+    templates::package::export_template_package,
+    web::server as web_server,
 };
 use serde_json::Value;
 
 pub use crate::app_paths::Paths;
-pub use crate::remote_template_actions::{
+pub use crate::remote::actions::{
     delete_remote_template, remote_template_upload_preview, storage_summary, upload_remote_template,
 };
-pub use crate::template_service::{list_templates, load_active_template, use_template};
-pub use crate::web_launch::{DEFAULT_WEB_HOST, DEFAULT_WEB_PORT};
+pub use crate::templates::service::{list_templates, load_active_template, use_template};
+pub use crate::web::launch::{DEFAULT_WEB_HOST, DEFAULT_WEB_PORT};
 
 pub fn init_new_workspace(path: PathBuf, template_ref: Option<&str>) -> Result<Workspace> {
     init_workspace(&path, template_ref)
