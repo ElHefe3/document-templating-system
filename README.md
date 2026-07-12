@@ -6,7 +6,7 @@ The included example workspace is resume/CV oriented on purpose. It demonstrates
 
 ## Project Layout
 
-- `src/` - Rust CLI, workspace model, template system, renderer, PDF integration, and local web server.
+- `src/` - Rust source organized by domain: `cli/`, `web/`, `templates/`, `remote/`, `storage/`, `pdf/`, and `archive/`, plus core workspace/model modules.
 - `web/` - vanilla HTML/CSS/JS for the browser editor.
 - `templates/` - built-in resume/CV template renderers.
 - `examples/workspace/` - sample resume/CV workspace.

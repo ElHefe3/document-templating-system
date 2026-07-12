@@ -88,7 +88,7 @@ fn timestamp_suffix() -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{document_model::set_path, model::classic_template};
+    use crate::{document_model::set_path, templates::builtin::classic_template};
     use serde_json::json;
 
     #[test]
