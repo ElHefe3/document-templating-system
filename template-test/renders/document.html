@@ -3,76 +3,96 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lebenslauf</title>
+    <title>Curriculum Vitae</title>
     <style>body {
   background: #ffffff;
-  color: #1d252d;
-  font-family: "Arial", "Segoe UI", sans-serif;
+  color: #17202a;
+  font-family: "Segoe UI", Arial, sans-serif;
   font-size: 12px;
-  line-height: 1.38;
+  line-height: 1.42;
   margin: 18px auto;
   max-width: 940px;
   padding: 0 20px 28px;
 }
 
-.lebenslauf {
-  border-top: 5px solid #263238;
+.nl-cv {
+  border-top: 7px solid #f97316;
 }
 
-.kopf {
-  border-bottom: 1px solid #b0bec5;
-  overflow: hidden;
-  padding: 18px 0 14px;
+.hero {
+  align-items: flex-end;
+  display: table;
+  padding: 18px 0 16px;
+  width: 100%;
+}
+
+.hero > div {
+  display: table-cell;
+  vertical-align: bottom;
+}
+
+.hero > div:first-child {
+  width: 55%;
 }
 
 .doc {
-  color: #607d8b;
+  color: #64748b;
   font-size: 11px;
-  letter-spacing: 0.1em;
-  margin: 0 0 6px;
+  letter-spacing: 0.08em;
+  margin: 0 0 4px;
   text-transform: uppercase;
 }
 
 h1 {
-  font-size: 30px;
+  color: #0f172a;
+  font-size: 31px;
   line-height: 1.05;
   margin: 0;
 }
 
-.role {
-  color: #455a64;
+.headline {
+  color: #334155;
   font-size: 15px;
   margin: 6px 0 0;
 }
 
-.photo {
-  border: 1px solid #b0bec5;
-  float: right;
-  height: 132px;
-  margin-left: 18px;
-  object-fit: cover;
-  width: 102px;
+.contact {
+  color: #334155;
+  display: block;
+  text-align: right;
 }
 
-.layout {
+.contact span {
+  display: inline-block;
+  margin: 0 0 5px 12px;
+}
+
+.profile {
+  background: #fff7ed;
+  border-left: 4px solid #f97316;
+  padding: 10px 12px;
+}
+
+.body-grid {
   display: table;
-  padding-top: 18px;
+  margin-top: 18px;
   table-layout: fixed;
   width: 100%;
 }
 
-aside {
-  border-right: 1px solid #cfd8dc;
+.body-grid > article,
+.body-grid > aside {
   display: table-cell;
-  padding-right: 18px;
   vertical-align: top;
-  width: 250px;
 }
 
-article {
-  display: table-cell;
-  padding-left: 28px;
-  vertical-align: top;
+.body-grid > article {
+  padding-right: 28px;
+  width: auto;
+}
+
+.body-grid > aside {
+  width: 260px;
 }
 
 section {
@@ -80,12 +100,9 @@ section {
 }
 
 h2 {
-  color: #263238;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+  color: #0f172a;
+  font-size: 14px;
   margin: 0 0 8px;
-  padding-bottom: 3px;
-  text-transform: uppercase;
 }
 
 h3 {
@@ -97,40 +114,33 @@ p {
   margin: 4px 0;
 }
 
-.detail {
-  margin-bottom: 6px;
+.entry {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 11px;
+  padding-bottom: 9px;
 }
 
-.detail span {
-  color: #607d8b;
-  display: block;
-  font-size: 11px;
+.entry.compact {
+  border-bottom: 0;
 }
 
-.detail strong {
-  font-weight: 600;
+.entry-head {
+  align-items: baseline;
+  overflow: hidden;
 }
 
-.row {
-  display: table;
-  margin-bottom: 12px;
-  table-layout: fixed;
-  width: 100%;
+.entry-head h3 {
+  display: inline;
 }
 
-.row > div {
-  display: table-cell;
-  vertical-align: top;
+.entry-head span {
+  float: right;
+  margin-left: 12px;
 }
 
-.row > div:first-child {
-  padding-right: 16px;
-  width: 115px;
-}
-
-.date,
+.entry-head span,
 .sub {
-  color: #607d8b;
+  color: #64748b;
 }
 
 ul {
@@ -142,6 +152,19 @@ li {
   margin-bottom: 3px;
 }
 
+.tags {
+  list-style: none;
+  padding-left: 0;
+}
+
+.tags li {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: inline-block;
+  margin: 0 4px 6px 0;
+  padding: 3px 7px;
+}
+
 @media screen and (max-width: 720px) {
   body {
     margin: 0;
@@ -150,93 +173,96 @@ li {
     font-size: 14px;
   }
 
-  .kopf,
-  .layout,
-  .row {
+  .hero,
+  .body-grid {
     display: block;
   }
 
-  aside {
-    border-right: 0;
-    padding-right: 0;
+  .contact {
+    justify-content: flex-start;
+    margin-top: 10px;
+    text-align: left;
   }
 
-  .photo {
-    margin-top: 12px;
+  .entry-head {
+    display: block;
   }
 }
 </style>
   </head>
   <body>
-    <main class="lebenslauf">
-      <header class="kopf">
+    <main class="nl-cv">
+      <header class="hero">
         <div>
-          <p class="doc">Lebenslauf</p>
+          <p class="doc">Curriculum Vitae</p>
           <h1>Your Name</h1>
-          <p class="role">Software Engineer</p>
+          <p class="headline">Software Engineer</p>
+        </div>
+        <div class="contact">
+          <span>you@example.com</span>
+          
+          <span>Amsterdam, Netherlands</span>
+          
+          
         </div>
       </header>
 
-      <div class="layout">
-        <aside>
-          <section>
-            <h2>Kontakt</h2>
-            <p>Berlin, Germany</p>
-            <p>you@example.com</p>
-            
-            
-            
-          </section>
+      <section class="profile">
+        <h2>Profile</h2>
+        <p>Software engineer focused on pragmatic delivery, maintainable systems, and clear collaboration across product and engineering teams.</p>
+      </section>
 
-          <section>
-            <h2>Personliche Daten</h2>
-            <div class="detail">
-              <span>Work authorization</span>
-              <strong>No</strong>
-            </div>
-          </section>
-
-          <section>
-            <h2>Kenntnisse</h2>
-            <ul><li>Backend development</li><li>Distributed systems</li><li>Cloud platforms</li><li>CI/CD</li><li>Databases</li></ul>
-          </section>
-
-          <section>
-            <h2>Sprachen</h2>
-            <ul><li>English - Professional</li><li>German - Add level</li></ul>
-          </section>
-        </aside>
-
+      <div class="body-grid">
         <article>
           <section>
-            <h2>Profil</h2>
-            <p>Software engineer with experience building reliable production systems, backend services, and cross-functional delivery.</p>
-          </section>
-
-          <section>
-            <h2>Berufserfahrung</h2>
-            <div class="row">
-              <div class="date">2024 - Present</div>
-              <div>
+            <h2>Experience</h2>
+            <div class="entry">
+              <div class="entry-head">
                 <h3>Software Engineer</h3>
-                <p class="sub">Company Name | Berlin, Germany</p>
-                <ul><li>Describe a measurable result, business impact, or technical improvement.</li><li>Name the technologies, systems, or stakeholders involved.</li><li>Keep each bullet concise and outcome-focused.</li></ul>
+                <span>2024 - Present</span>
               </div>
+              <p class="sub">Company Name | Amsterdam, Netherlands</p>
+              <ul><li>Describe a measurable result, business impact, or technical improvement.</li><li>Name the technologies, systems, or stakeholders involved.</li><li>Keep each bullet concise and outcome-focused.</li></ul>
             </div>
           </section>
 
           <section>
-            <h2>Ausbildung</h2>
-            <div class="row">
-              <div class="date"></div>
-              <div>
-                <h3>Degree or qualification</h3>
-                <p class="sub">Institution Name</p>
-              </div>
+            <h2>Projects</h2>
+            <div class="entry compact">
+              <h3>Selected Project</h3>
+              
+              <p>Briefly describe the project, your role, and the result.</p>
+            </div>
+          </section>
+        </article>
+
+        <aside>
+          <section>
+            <h2>Skills</h2>
+            <ul class="tags"><li>Backend development</li><li>Full-stack delivery</li><li>Cloud platforms</li><li>Automated testing</li><li>Observability</li></ul>
+          </section>
+
+          <section>
+            <h2>Languages</h2>
+            <ul><li>English - Professional</li><li>Dutch - Add level if applicable</li></ul>
+          </section>
+
+          <section>
+            <h2>Education</h2>
+            <div class="entry compact">
+              <h3>Degree or qualification</h3>
+              <p class="sub">Institution Name</p>
+              <p></p>
             </div>
           </section>
 
-        </article>
+          <section>
+            <h2>Details</h2>
+            
+            
+            <p><strong>Preferred work mode:</strong> Hybrid / remote</p>
+          </section>
+        </aside>
       </div>
     </main>
   </body>

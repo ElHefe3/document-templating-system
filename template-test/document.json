@@ -17,39 +17,35 @@
       ],
       "company": "Company Name",
       "date": "2024 - Present",
-      "location": "Berlin, Germany",
+      "location": "Amsterdam, Netherlands",
       "role": "Software Engineer"
     }
   ],
   "languages": [
     "English - Professional",
-    "German - Add level"
+    "Dutch - Add level if applicable"
   ],
   "personal_details": [
     {
       "label": "Work authorization",
-      "value": "No"
-    },
-    {
-      "label": "Nationality",
-      "value": ""
-    },
-    {
-      "label": "Date of birth",
       "value": ""
     },
     {
       "label": "Availability",
       "value": ""
+    },
+    {
+      "label": "Preferred work mode",
+      "value": "Hybrid / remote"
     }
   ],
   "profile": {
-    "country": "Germany",
-    "document_title": "Lebenslauf",
+    "country": "Netherlands",
+    "document_title": "Curriculum Vitae",
     "email": "you@example.com",
     "full_name": "Your Name",
     "linkedin": "",
-    "location": "Berlin, Germany",
+    "location": "Amsterdam, Netherlands",
     "phone": "",
     "photo": "",
     "photo_alt": "",
@@ -65,11 +61,11 @@
   ],
   "skills": [
     "Backend development",
-    "Distributed systems",
+    "Full-stack delivery",
     "Cloud platforms",
-    "CI/CD",
-    "Databases"
+    "Automated testing",
+    "Observability"
   ],
-  "summary": "Software engineer with experience building reliable production systems, backend services, and cross-functional delivery.",
-  "template_guidance": "German CVs are commonly reverse chronological and often use a clear tabular structure. A professional photo and personal details are optional and context-dependent; include only what you are comfortable sharing and what fits the employer."
+  "summary": "Software engineer focused on pragmatic delivery, maintainable systems, and clear collaboration across product and engineering teams.",
+  "template_guidance": "Dutch CVs are usually concise, direct, and achievement-focused. Personal details and photos are generally optional; prioritize relevant experience, technologies, outcomes, and links."
 }

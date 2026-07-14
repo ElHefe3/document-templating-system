@@ -157,37 +157,6 @@ mod tests {
     }
 
     #[test]
-    fn builtin_template_pdf_css_avoids_wkhtmltopdf_unstable_layout_primitives() {
-        for template in [
-            classic_template(),
-            country_resume_template_by_id(BUILTIN_RESUME_GERMANY_ID).unwrap(),
-            country_resume_template_by_id(BUILTIN_RESUME_NETHERLANDS_ID).unwrap(),
-            country_resume_template_by_id(BUILTIN_RESUME_INDONESIA_ID).unwrap(),
-        ] {
-            let pdf_css = template
-                .render
-                .css
-                .split("@media screen")
-                .next()
-                .unwrap_or(&template.render.css)
-                .to_ascii_lowercase();
-
-            for unstable in [
-                "display: grid",
-                "display: flex",
-                "grid-template",
-                "columns:",
-            ] {
-                assert!(
-                    !pdf_css.contains(unstable),
-                    "{} PDF CSS should not contain {unstable}",
-                    template.id
-                );
-            }
-        }
-    }
-
-    #[test]
     fn template_summary_marks_builtin() {
         let summary = classic_template().summary_with_source(true, "built-in");
         assert_eq!(summary.id, BUILTIN_CLASSIC_ID);

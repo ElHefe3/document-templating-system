@@ -4,7 +4,7 @@ use anyhow::{bail, Result};
 
 use crate::{
     model::{document_summary, init_workspace, validate_document, TemplateManifest, Workspace},
-    pdf::renderer as pdf_renderer,
+    pdf::{PdfRenderRequest, PdfRenderer, PdfService, WkhtmltopdfRenderer},
     render,
     templates::package::export_template_package,
     web::server as web_server,
@@ -44,14 +44,16 @@ pub fn summary(paths: &Paths) -> Result<String> {
 
 pub fn doctor(paths: &Paths) -> Result<String> {
     let data = load_valid_active_document(paths)?;
-    let renderer_status = match pdf_renderer::project_wkhtmltopdf(&paths.project_root) {
-        Ok(_) => {
-            match pdf_renderer::pdf_render_command(
-                &paths.workspace,
-                &paths.project_root,
-                &data.template,
-            ) {
-                Ok(command) => command.to_log(),
+    let renderer_status = match WkhtmltopdfRenderer::discover(&paths.project_root) {
+        Ok(renderer) => {
+            let request = PdfRenderRequest {
+                html_path: paths.workspace.html_path.clone(),
+                output_path: paths.workspace.pdf_output_path(&data.template),
+                working_directory: paths.workspace.root.clone(),
+                asset_base_directory: paths.workspace.renders_dir.clone(),
+            };
+            match renderer.describe(&request) {
+                Ok(description) => description,
                 Err(err) => format!("PDF renderer: {err}"),
             }
         }
@@ -94,16 +96,17 @@ pub fn render_html(paths: &Paths) -> Result<String> {
 
 pub fn render_pdf(paths: &Paths) -> Result<String> {
     let template = load_active_template(paths)?;
-    let rendered =
-        pdf_renderer::render_pdf_with_template(&paths.workspace, &paths.project_root, &template)?;
+    let renderer = WkhtmltopdfRenderer::discover(&paths.project_root)?;
+    let service = PdfService::new(&renderer);
+    let rendered = service.render_with_template(&paths.workspace, &template)?;
     Ok(format!(
         "Rendered {}.\n{}\n",
         rendered
-            .pdf_path
+            .output_path
             .strip_prefix(&paths.workspace.root)
-            .unwrap_or(&rendered.pdf_path)
+            .unwrap_or(&rendered.output_path)
             .display(),
-        rendered.diagnostics.to_log()
+        rendered.diagnostics
     ))
 }
 

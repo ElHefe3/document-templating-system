@@ -12,7 +12,7 @@ use crate::{
     app_paths::Paths,
     integrations,
     model::validate_document,
-    pdf::renderer as pdf_renderer,
+    pdf::{PdfService, WkhtmltopdfRenderer},
     render,
     templates::service as template_service,
     web::assets as web_assets,
@@ -120,12 +120,11 @@ pub(crate) fn render_pdf(state: &WebState, request: &mut Request) -> HttpResult<
     save_optional_document(state, request)?;
     let paths = lock_paths(state)?;
     let template = integrations::load_active_template(&paths).map_err(internal_error)?;
-    let body = pdf_renderer::render_pdf_bytes_with_template(
-        &paths.workspace,
-        &paths.project_root,
-        &template,
-    )
-    .map_err(internal_error)?;
+    let renderer = WkhtmltopdfRenderer::discover(&paths.project_root).map_err(internal_error)?;
+    let service = PdfService::new(&renderer);
+    let body = service
+        .render_bytes_with_template(&paths.workspace, &template)
+        .map_err(internal_error)?;
     Ok(binary_response(
         body,
         "application/pdf",

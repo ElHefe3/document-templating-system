@@ -1,5 +1,5 @@
-pub(crate) mod command;
-pub(crate) mod renderer;
+pub(crate) mod backend;
+mod service;
 
-#[cfg(test)]
-mod command_tests;
+pub(crate) use backend::{PdfRenderRequest, PdfRenderer, WkhtmltopdfRenderer};
+pub(crate) use service::PdfService;
