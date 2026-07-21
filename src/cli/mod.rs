@@ -39,6 +39,17 @@ pub fn run() -> Result<()> {
             }
             return Ok(());
         }
+        Command::ImportDocument { input, path } => {
+            print!(
+                "{}",
+                integrations::import_document_package_file(&input, &path)?
+            );
+            return Ok(());
+        }
+        Command::OpenDocument { input } => {
+            let paths = integrations::open_document_package(&input)?;
+            return integrations::run_web_server(&paths, &cli.web_host, cli.web_port, cli.web_open);
+        }
         _ => {}
     }
 
@@ -73,11 +84,22 @@ pub fn run() -> Result<()> {
             println!("{}", integrations::export_template_bundle(&path, &output)?);
             Ok(())
         }
+        Command::ExportDocument { output } => {
+            println!(
+                "{}",
+                integrations::export_document_package(&paths, &output)?
+            );
+            Ok(())
+        }
         Command::Doctor => {
             print!("{}", integrations::doctor(&paths)?);
             Ok(())
         }
-        Command::Init { .. } | Command::Templates | Command::Help => unreachable!(),
+        Command::Init { .. }
+        | Command::Templates
+        | Command::ImportDocument { .. }
+        | Command::OpenDocument { .. }
+        | Command::Help => unreachable!(),
     }
 }
 

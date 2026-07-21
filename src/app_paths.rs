@@ -1,5 +1,5 @@
 use std::{
-    env,
+    env, fs,
     path::{Path, PathBuf},
 };
 
@@ -8,6 +8,7 @@ use anyhow::{bail, Context, Result};
 use crate::{
     config::AppConfig,
     model::{Workspace, WORKSPACE_MANIFEST},
+    workspace::init_workspace,
 };
 
 #[derive(Debug, Clone)]
@@ -29,6 +30,56 @@ impl Paths {
             app_config,
         })
     }
+
+    pub fn discover_managed() -> Result<Self> {
+        let project_root = find_project_root()?;
+        let workspace = ensure_managed_workspace()?;
+        let app_config = AppConfig::load(&project_root)?;
+        Ok(Self {
+            project_root,
+            workspace,
+            app_config,
+        })
+    }
+}
+
+pub fn managed_workspace_root() -> PathBuf {
+    if let Ok(path) = env::var("DOCUMENT_TEMPLATING_SYSTEM_MANAGED_WORKSPACE") {
+        if !path.trim().is_empty() {
+            return PathBuf::from(path);
+        }
+    }
+    if cfg!(windows) {
+        if let Ok(local_app_data) = env::var("LOCALAPPDATA") {
+            if !local_app_data.trim().is_empty() {
+                return PathBuf::from(local_app_data)
+                    .join("document-templating-system")
+                    .join("workspaces")
+                    .join("current");
+            }
+        }
+    }
+    env::temp_dir()
+        .join("document-templating-system")
+        .join("workspaces")
+        .join("current")
+}
+
+pub fn reset_managed_workspace() -> Result<PathBuf> {
+    let root = managed_workspace_root();
+    if root.exists() {
+        fs::remove_dir_all(&root).with_context(|| format!("failed to reset {}", root.display()))?;
+    }
+    Ok(root)
+}
+
+pub fn ensure_managed_workspace() -> Result<Workspace> {
+    let root = managed_workspace_root();
+    if has_workspace(&root) {
+        return Workspace::discover(&root);
+    }
+    reset_managed_workspace()?;
+    init_workspace(&root, None)
 }
 
 fn find_project_root() -> Result<PathBuf> {
@@ -65,7 +116,7 @@ fn find_project_root() -> Result<PathBuf> {
         .context("could not find document-templating-system install root")
 }
 
-fn find_workspace_root(workspace_arg: Option<PathBuf>, project_root: &Path) -> Result<PathBuf> {
+fn find_workspace_root(workspace_arg: Option<PathBuf>, _project_root: &Path) -> Result<PathBuf> {
     if let Some(path) = workspace_arg {
         return validate_workspace(path);
     }
@@ -84,14 +135,7 @@ fn find_workspace_root(workspace_arg: Option<PathBuf>, project_root: &Path) -> R
         }
     }
 
-    let example = project_root.join("examples").join("workspace");
-    if has_workspace(&example) {
-        return Ok(example);
-    }
-
-    bail!(
-        "could not find a document workspace; run --init <path>, pass --workspace <path>, or set DOCUMENT_WORKSPACE"
-    )
+    Ok(ensure_managed_workspace()?.root)
 }
 
 fn validate_workspace(path: PathBuf) -> Result<PathBuf> {
@@ -136,6 +180,21 @@ mod tests {
 
         assert!(err.to_string().contains("workspace does not contain"));
 
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn discover_uses_managed_workspace_when_no_workspace_is_selected() {
+        let root = temp_dir("managed-workspace");
+        let managed = root.join("managed");
+        env::set_var("DOCUMENT_TEMPLATING_SYSTEM_MANAGED_WORKSPACE", &managed);
+
+        let paths = Paths::discover(None).unwrap();
+
+        assert_eq!(paths.workspace.root, managed);
+        assert!(managed.join(WORKSPACE_MANIFEST).is_file());
+
+        env::remove_var("DOCUMENT_TEMPLATING_SYSTEM_MANAGED_WORKSPACE");
         fs::remove_dir_all(root).unwrap();
     }
 }

@@ -15,6 +15,9 @@ pub(crate) enum Command {
     Templates,
     UseTemplate { template: String },
     ExportTemplate { path: PathBuf, output: PathBuf },
+    ExportDocument { output: PathBuf },
+    ImportDocument { input: PathBuf, path: PathBuf },
+    OpenDocument { input: PathBuf },
     Doctor,
     Help,
 }
@@ -89,6 +92,34 @@ where
                 command = Command::ExportTemplate {
                     path: PathBuf::from(path),
                     output: PathBuf::from(output),
+                };
+            }
+            "--export-document" => {
+                let output = iter
+                    .next()
+                    .context("--export-document requires an output .dtsdoc path")?;
+                command = Command::ExportDocument {
+                    output: PathBuf::from(output),
+                };
+            }
+            "--import-document" => {
+                let input = iter
+                    .next()
+                    .context("--import-document requires an input .dtsdoc path")?;
+                let path = iter
+                    .next()
+                    .context("--import-document requires a destination workspace path")?;
+                command = Command::ImportDocument {
+                    input: PathBuf::from(input),
+                    path: PathBuf::from(path),
+                };
+            }
+            "--open-document" => {
+                let input = iter
+                    .next()
+                    .context("--open-document requires an input .dtsdoc path")?;
+                command = Command::OpenDocument {
+                    input: PathBuf::from(input),
                 };
             }
             "--help" | "-h" => command = Command::Help,

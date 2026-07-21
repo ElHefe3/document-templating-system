@@ -9,7 +9,8 @@ use serde_json::{json, Map, Value};
 use tiny_http::Request;
 
 use crate::{
-    app_paths::Paths,
+    app_paths::{ensure_managed_workspace, Paths},
+    document_package::{export_workspace_package_bytes, replace_workspace_from_package_bytes},
     integrations,
     model::validate_document,
     pdf::renderer as pdf_renderer,
@@ -133,6 +134,71 @@ pub(crate) fn render_pdf(state: &WebState, request: &mut Request) -> HttpResult<
             "attachment; filename=\"{}\"",
             template.render.pdf_filename
         )),
+        200,
+    ))
+}
+
+pub(crate) fn export_document_package(state: &WebState) -> HttpResult<WebResponse> {
+    let paths = lock_paths(state)?;
+    save_valid_document(
+        &paths,
+        &paths.workspace.load_document().map_err(internal_error)?,
+    )?;
+    let body = export_workspace_package_bytes(&paths.workspace).map_err(internal_error)?;
+    Ok(binary_response(
+        body,
+        "application/vnd.document-templating-system.dtsdoc",
+        Some("attachment; filename=\"document.dtsdoc\"".to_string()),
+        200,
+    ))
+}
+
+pub(crate) fn import_document_package(
+    state: &WebState,
+    request: &mut Request,
+) -> HttpResult<WebResponse> {
+    const MAX_PACKAGE_JSON_BYTES: u64 = 50 * 1024 * 1024;
+    let payload = read_json_limited(request, true, MAX_PACKAGE_JSON_BYTES)?;
+    let overwrite = payload
+        .get("overwrite")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+    if !overwrite {
+        return Err(HttpError::new(
+            409,
+            "import requires overwrite confirmation",
+        ));
+    }
+    let content_base64 = payload
+        .get("contentBase64")
+        .and_then(Value::as_str)
+        .ok_or_else(|| HttpError::new(400, "contentBase64 is required"))?;
+    let encoded = content_base64
+        .split_once(',')
+        .filter(|(prefix, _)| prefix.starts_with("data:"))
+        .map(|(_, rest)| rest)
+        .unwrap_or(content_base64);
+    let bytes = base64::engine::general_purpose::STANDARD
+        .decode(encoded)
+        .map_err(|err| HttpError::new(400, format!("invalid base64: {err}")))?;
+
+    let mut paths = lock_paths(state)?;
+    let managed_workspace = ensure_managed_workspace().map_err(internal_error)?;
+    let workspace =
+        replace_workspace_from_package_bytes(&bytes, &managed_workspace).map_err(bad_request)?;
+    paths.workspace = workspace;
+    let template = integrations::load_active_template(&paths).map_err(bad_request)?;
+    let document = paths.workspace.load_document().map_err(internal_error)?;
+    validate_document(&template, &document).map_err(bad_request)?;
+    let assets = web_assets::list_assets(&paths.workspace).map_err(internal_error)?;
+    Ok(json_response(
+        &json!({
+            "ok": true,
+            "workspace": paths.workspace.root,
+            "template": template,
+            "document": document,
+            "assets": assets
+        }),
         200,
     ))
 }

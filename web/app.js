@@ -53,7 +53,7 @@ function setStatus(message, kind = "") {
 
 function setBusy(value) {
   state.busy = value;
-  for (const id of ["saveBtn", "renderBtn", "pdfBtn", "reloadBtn", "refreshPreviewBtn"]) {
+  for (const id of ["saveBtn", "exportDocBtn", "importDocBtn", "renderBtn", "pdfBtn", "reloadBtn", "refreshPreviewBtn"]) {
     document.getElementById(id).disabled = value;
   }
 }
@@ -654,6 +654,68 @@ async function saveDocument() {
   }
 }
 
+async function exportDocumentPackage() {
+  setBusy(true);
+  try {
+    if (state.dirty) {
+      await api("/api/document", { method: "PUT", body: JSON.stringify({ document: state.data }) });
+      state.dirty = false;
+    }
+    const response = await fetch("/api/document/package");
+    if (!response.ok) {
+      const payload = await response.json().catch(() => null);
+      throw new Error((payload && payload.error) || `${response.status} ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    downloadBlob(blob, filenameFromDisposition(response.headers.get("Content-Disposition")) || "document.dtsdoc");
+    setStatus("Downloaded .dtsdoc", "ok");
+  } catch (error) {
+    setStatus(error.message, "error");
+  } finally {
+    setBusy(false);
+  }
+}
+
+function chooseDocumentPackage() {
+  document.getElementById("importDocInput").click();
+}
+
+async function importDocumentPackage(input) {
+  const file = input.files && input.files[0];
+  input.value = "";
+  if (!file) {
+    return;
+  }
+  if (!window.confirm("Importing this .dtsdoc will replace the current editable workspace. Continue?")) {
+    setStatus("Import cancelled", "");
+    return;
+  }
+  setBusy(true);
+  try {
+    const contentBase64 = await readFileAsDataUrl(file);
+    const result = await api("/api/document/package/import", {
+      method: "POST",
+      body: JSON.stringify({ filename: file.name, contentBase64, overwrite: true }),
+    });
+    state.workspace = result.workspace || state.workspace;
+    state.templates = [];
+    state.template = result.template;
+    state.data = result.document;
+    state.assets = result.assets || [];
+    state.active = state.template.sections && state.template.sections[0] ? state.template.sections[0].id : "assets";
+    state.dirty = false;
+    await loadTemplates();
+    renderNavigation();
+    setStatus(`Imported ${file.name}`, "ok");
+    rerender();
+    refreshPreview();
+  } catch (error) {
+    setStatus(error.message, "error");
+  } finally {
+    setBusy(false);
+  }
+}
+
 async function renderHtml() {
   setBusy(true);
   try {
@@ -739,6 +801,9 @@ function refreshPreview() {
 function wireEvents() {
   document.getElementById("reloadBtn").addEventListener("click", () => loadAll(false));
   document.getElementById("saveBtn").addEventListener("click", saveDocument);
+  document.getElementById("exportDocBtn").addEventListener("click", exportDocumentPackage);
+  document.getElementById("importDocBtn").addEventListener("click", chooseDocumentPackage);
+  document.getElementById("importDocInput").addEventListener("change", (event) => importDocumentPackage(event.target));
   document.getElementById("renderBtn").addEventListener("click", renderHtml);
   document.getElementById("pdfBtn").addEventListener("click", renderPdf);
   document.getElementById("refreshPreviewBtn").addEventListener("click", refreshPreview);

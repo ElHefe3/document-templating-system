@@ -68,6 +68,10 @@ fn route(state: &WebState, request: &mut Request) -> HttpResult<WebResponse> {
         (Method::Put, "/api/workspace/template") => api::select_template(state, request),
         (Method::Post, "/api/render/html") => api::render_html(state, request),
         (Method::Post, "/api/render/pdf") => api::render_pdf(state, request),
+        (Method::Get, "/api/document/package") => api::export_document_package(state),
+        (Method::Post, "/api/document/package/import") => {
+            api::import_document_package(state, request)
+        }
         (Method::Post, "/api/assets") => api::save_asset(state, request),
         (Method::Post, "/api/remote/templates") => api::remote_template_upload(state, request),
         (Method::Post, "/api/remote/templates/delete") => {
