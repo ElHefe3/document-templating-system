@@ -1,8 +1,12 @@
 /target/
 /target-current/
 /tmp/
+tmp/
 /dist/
 /output/
+/*.dtsdoc
+/july-resume/
+/my-document/
 **/__pycache__/
 *.pyc
 *.pdb

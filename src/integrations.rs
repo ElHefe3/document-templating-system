@@ -3,6 +3,10 @@ use std::path::{Path, PathBuf};
 use anyhow::{bail, Result};
 
 use crate::{
+    app_paths::reset_managed_workspace,
+    document_package::{
+        export_workspace_package, import_workspace_package, DOCUMENT_PACKAGE_EXTENSION,
+    },
     model::{document_summary, init_workspace, validate_document, TemplateManifest, Workspace},
     pdf::renderer as pdf_renderer,
     render,
@@ -119,6 +123,39 @@ pub fn export_template_bundle(path: &Path, output_path: &Path) -> Result<String>
     Ok(format!("Wrote template package {}.", output_path.display()))
 }
 
+pub fn export_document_package(paths: &Paths, output_path: &Path) -> Result<String> {
+    if output_path.extension().and_then(|value| value.to_str()) != Some(DOCUMENT_PACKAGE_EXTENSION)
+    {
+        bail!("document package export requires a .{DOCUMENT_PACKAGE_EXTENSION} output path");
+    }
+    let _ = load_valid_active_document(paths)?;
+    export_workspace_package(&paths.workspace, output_path)?;
+    Ok(format!("Wrote document package {}.", output_path.display()))
+}
+
+pub fn import_document_package_file(package_path: &Path, dest_dir: &Path) -> Result<String> {
+    if package_path.extension().and_then(|value| value.to_str()) != Some(DOCUMENT_PACKAGE_EXTENSION)
+    {
+        bail!("document package import requires a .{DOCUMENT_PACKAGE_EXTENSION} file");
+    }
+    let workspace = import_workspace_package(package_path, dest_dir)?;
+    Ok(format!(
+        "Imported document package to {}.\nTemplate: {}\n",
+        workspace.root.display(),
+        workspace.active_template
+    ))
+}
+
+pub fn open_document_package(package_path: &Path) -> Result<Paths> {
+    if package_path.extension().and_then(|value| value.to_str()) != Some(DOCUMENT_PACKAGE_EXTENSION)
+    {
+        bail!("document package open requires a .{DOCUMENT_PACKAGE_EXTENSION} file");
+    }
+    let workspace_root = reset_managed_workspace()?;
+    import_workspace_package(package_path, &workspace_root)?;
+    Paths::discover_managed()
+}
+
 struct ActiveDocumentData {
     template: TemplateManifest,
     document: Value,
@@ -158,6 +195,30 @@ mod tests {
         assert!(output.starts_with("OK: "));
         assert!(output.contains("Classic Resume"));
 
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn open_document_package_imports_to_managed_workspace() {
+        let root = temp_dir("integration-open-dtsdoc");
+        let source_root = root.join("source");
+        let managed_root = root.join("managed");
+        std::env::set_var(
+            "DOCUMENT_TEMPLATING_SYSTEM_MANAGED_WORKSPACE",
+            &managed_root,
+        );
+        let source = init_new_workspace(source_root, None).unwrap();
+        let package_path = root.join("resume.dtsdoc");
+        export_workspace_package(&source, &package_path).unwrap();
+
+        let paths = open_document_package(&package_path).unwrap();
+        let discovered = Paths::discover(None).unwrap();
+
+        assert_eq!(paths.workspace.root, managed_root);
+        assert_eq!(discovered.workspace.root, managed_root);
+        assert!(managed_root.join("document.json").is_file());
+
+        std::env::remove_var("DOCUMENT_TEMPLATING_SYSTEM_MANAGED_WORKSPACE");
         fs::remove_dir_all(root).unwrap();
     }
 }

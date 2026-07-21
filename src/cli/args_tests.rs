@@ -114,6 +114,58 @@ fn parses_export_template_command() {
 }
 
 #[test]
+fn parses_export_document_command() {
+    let cli = parse_args(
+        ["--export-document", "resume.dtsdoc"]
+            .into_iter()
+            .map(str::to_string),
+    )
+    .unwrap();
+
+    match cli.command {
+        Command::ExportDocument { output } => {
+            assert_eq!(output, PathBuf::from("resume.dtsdoc"));
+        }
+        _ => panic!("expected export document command"),
+    }
+}
+
+#[test]
+fn parses_import_document_command() {
+    let cli = parse_args(
+        ["--import-document", "resume.dtsdoc", "restored"]
+            .into_iter()
+            .map(str::to_string),
+    )
+    .unwrap();
+
+    match cli.command {
+        Command::ImportDocument { input, path } => {
+            assert_eq!(input, PathBuf::from("resume.dtsdoc"));
+            assert_eq!(path, PathBuf::from("restored"));
+        }
+        _ => panic!("expected import document command"),
+    }
+}
+
+#[test]
+fn parses_open_document_command() {
+    let cli = parse_args(
+        ["--open-document", "resume.dtsdoc"]
+            .into_iter()
+            .map(str::to_string),
+    )
+    .unwrap();
+
+    match cli.command {
+        Command::OpenDocument { input } => {
+            assert_eq!(input, PathBuf::from("resume.dtsdoc"));
+        }
+        _ => panic!("expected open document command"),
+    }
+}
+
+#[test]
 fn rejects_unknown_argument() {
     let error = parse_args(["--bogus"].into_iter().map(str::to_string)).unwrap_err();
     assert!(error.to_string().contains("unknown argument: --bogus"));
@@ -138,6 +190,9 @@ fn help_mentions_web_and_template_commands() {
     assert!(help.contains("--doctor"));
     assert!(help.contains("--init <path> [--template <id-or-path>]"));
     assert!(help.contains("--export-template <folder> <output.document-template>"));
+    assert!(help.contains("--export-document <output.dtsdoc>"));
+    assert!(help.contains("--import-document <input.dtsdoc> <workspace-path>"));
+    assert!(help.contains("--open-document <input.dtsdoc>"));
     assert!(!help.contains("--dump-frame"));
     assert!(!help.contains("--smoke"));
 }

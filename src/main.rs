@@ -3,6 +3,7 @@ mod archive;
 mod cli;
 mod config;
 mod document_model;
+mod document_package;
 mod integrations;
 mod json_file;
 mod model;

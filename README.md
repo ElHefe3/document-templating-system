@@ -62,13 +62,37 @@ Use another port when `7878` is already in use:
 scripts\start-document-templating-system.cmd --web --port 9000 --no-open
 ```
 
-## Workspaces
+## Documents
 
-Create a workspace:
+The normal editable file format is `.dtsdoc`. A `.dtsdoc` file contains the document JSON, active template reference, custom workspace templates, assets, and latest rendered HTML needed to reopen and edit the document later.
+
+Open a document package:
 
 ```cmd
-scripts\start-document-templating-system.cmd --init my-document
-scripts\start-document-templating-system.cmd --workspace my-document
+scripts\start-document-templating-system.cmd --open-document path\to\resume.dtsdoc
+```
+
+Export the currently open document package:
+
+```cmd
+scripts\start-document-templating-system.cmd --export-document resume.dtsdoc
+```
+
+With no command, the browser editor opens using a managed editing workspace outside the project folder:
+
+```text
+%LOCALAPPDATA%\document-templating-system\workspaces\current
+```
+
+Use `DOCUMENT_TEMPLATING_SYSTEM_MANAGED_WORKSPACE` to override the managed workspace location.
+
+## Folder Workspaces
+
+Folder workspaces are still supported for development, examples, and advanced workflows. Create one explicitly outside the project tree:
+
+```cmd
+scripts\start-document-templating-system.cmd --init C:\Documents\my-document
+scripts\start-document-templating-system.cmd --workspace C:\Documents\my-document
 ```
 
 Workspace layout:
@@ -93,6 +117,7 @@ scripts\start-document-templating-system.cmd --summary
 scripts\start-document-templating-system.cmd --render
 scripts\start-document-templating-system.cmd --pdf
 scripts\start-document-templating-system.cmd --doctor
+scripts\start-document-templating-system.cmd --export-document resume.dtsdoc
 ```
 
 Initialize directly with a built-in resume/CV template:
