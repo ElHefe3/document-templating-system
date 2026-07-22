@@ -3,7 +3,8 @@ const state = {
   template: null,
   templates: [],
   assets: [],
-  active: "",
+  activeSystemTab: "document",
+  activeSection: "",
   dirty: false,
   busy: false,
   workspace: "",
@@ -12,6 +13,7 @@ const state = {
 const root = document.getElementById("editorRoot");
 const statusEl = document.getElementById("status");
 const previewFrame = document.getElementById("previewFrame");
+const systemTabs = document.getElementById("systemTabs");
 const sectionNav = document.getElementById("sectionNav");
 
 function el(tag, attrs = {}, children = []) {
@@ -54,8 +56,14 @@ function setStatus(message, kind = "") {
 function setBusy(value) {
   state.busy = value;
   for (const id of ["saveBtn", "exportDocBtn", "importDocBtn", "renderBtn", "pdfBtn", "reloadBtn", "refreshPreviewBtn"]) {
-    document.getElementById(id).disabled = value;
+    const control = document.getElementById(id);
+    if (control) {
+      control.disabled = value;
+    }
   }
+  document.querySelectorAll(".file-actions button").forEach((control) => {
+    control.disabled = value;
+  });
 }
 
 function markDirty() {
@@ -129,63 +137,53 @@ function replaceRoot(nodes) {
 
 function renderNavigation() {
   sectionNav.textContent = "";
-  for (const section of state.template.sections || []) {
+  const sections = state.template && state.template.sections ? state.template.sections : [];
+  for (const section of sections) {
     sectionNav.append(
       el("button", {
         type: "button",
-        class: "tab",
+        class: "section-tab",
         "data-section": section.id,
         text: section.label,
         onClick: () => {
-          state.active = section.id;
+          state.activeSection = section.id;
           rerender();
         },
       }),
     );
   }
-  sectionNav.append(
-    el("button", {
-      type: "button",
-      class: "tab",
-      "data-section": "assets",
-      text: "Assets",
-      onClick: () => {
-        state.active = "assets";
-        rerender();
-      },
-    }),
-  );
-  sectionNav.append(
-    el("button", {
-      type: "button",
-      class: "tab",
-      "data-section": "templates",
-      text: "Templates",
-      onClick: () => {
-        state.active = "templates";
-        rerender();
-      },
-    }),
-  );
+  sectionNav.hidden = state.activeSystemTab !== "document";
+}
+
+function renderSystemTabs() {
+  systemTabs.querySelectorAll(".system-tab").forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.tab === state.activeSystemTab);
+  });
 }
 
 function rerender() {
-  document.querySelectorAll(".tab").forEach((tab) => {
-    tab.classList.toggle("active", tab.dataset.section === state.active);
+  renderSystemTabs();
+  renderNavigation();
+  document.querySelectorAll(".section-tab").forEach((tab) => {
+    tab.classList.toggle("active", tab.dataset.section === state.activeSection);
   });
   if (!state.data || !state.template) {
     replaceRoot([el("div", { class: "empty-state", text: "Loading document data..." })]);
     return;
   }
-  if (state.active === "assets") {
+  if (state.activeSystemTab === "files") {
+    renderFiles();
+    return;
+  }
+  if (state.activeSystemTab === "assets") {
     renderAssets();
     return;
   }
-  if (state.active === "templates") {
+  if (state.activeSystemTab === "templates") {
     renderTemplates();
     return;
   }
-  const section = (state.template.sections || []).find((item) => item.id === state.active);
+  const section = (state.template.sections || []).find((item) => item.id === state.activeSection);
   if (!section) {
     replaceRoot([el("div", { class: "empty-state", text: "No section selected." })]);
     return;
@@ -194,6 +192,25 @@ function rerender() {
     sectionHeader(section.label, section.description),
     el("div", { class: "form-grid" }, section.fields.map((field) => renderField(field, state.data, field.path))),
   ]);
+}
+
+function setSystemTab(tab) {
+  state.activeSystemTab = tab;
+  if (tab === "document") {
+    ensureActiveSection();
+  }
+  rerender();
+}
+
+function ensureActiveSection() {
+  const sections = state.template && state.template.sections ? state.template.sections : [];
+  if (!sections.length) {
+    state.activeSection = "";
+    return;
+  }
+  if (!sections.some((section) => section.id === state.activeSection)) {
+    state.activeSection = sections[0].id;
+  }
 }
 
 function renderField(field, scope, path) {
@@ -346,6 +363,30 @@ function removeItem(items, index, setItems) {
   setItems(items);
   markDirty();
   rerender();
+}
+
+function renderFiles() {
+  replaceRoot([
+    sectionHeader("Files", "Import and export editable document packages."),
+    el("article", { class: "item" }, [
+      el("div", { class: "item-title" }, [el("h3", { text: "Current Workspace" })]),
+      el("div", { class: "form-grid" }, [
+        infoField("Editable workspace", state.workspace || "(not loaded)"),
+        infoField("Package format", ".dtsdoc"),
+      ]),
+      el("p", {
+        class: "muted-copy",
+        text: "Imported packages are opened in the managed editing workspace. Export a .dtsdoc to keep a permanent editable copy.",
+      }),
+    ]),
+    el("article", { class: "item" }, [
+      el("div", { class: "item-title" }, [el("h3", { text: "Document Package" })]),
+      el("div", { class: "file-actions" }, [
+        button("Import .dtsdoc", chooseDocumentPackage, "primary", state.busy),
+        button("Export .dtsdoc", exportDocumentPackage, "", state.busy),
+      ]),
+    ]),
+  ]);
 }
 
 function renderAssets() {
@@ -598,9 +639,9 @@ async function loadTemplates() {
   state.templates = result.templates || [];
   const activeId = state.template && state.template.id;
   if (activeId && !state.templates.some((t) => t.id === activeId)) {
-    // Active template was deleted — reload workspace state to surface the error.
+    // Active template was deleted; reload workspace state to surface the error.
     await loadAll(true);
-    state.active = "templates";
+    state.activeSystemTab = "templates";
   } else {
     rerender();
   }
@@ -628,7 +669,8 @@ async function loadAll(force = false) {
     state.template = template.template;
     state.data = document.document;
     state.assets = assets.assets || [];
-    state.active = state.template.sections && state.template.sections[0] ? state.template.sections[0].id : "assets";
+    state.activeSystemTab = state.activeSystemTab || "document";
+    ensureActiveSection();
     state.dirty = false;
     renderNavigation();
     setStatus("Loaded document data", "ok");
@@ -702,7 +744,9 @@ async function importDocumentPackage(input) {
     state.template = result.template;
     state.data = result.document;
     state.assets = result.assets || [];
-    state.active = state.template.sections && state.template.sections[0] ? state.template.sections[0].id : "assets";
+    state.activeSystemTab = "document";
+    state.activeSection = "";
+    ensureActiveSection();
     state.dirty = false;
     await loadTemplates();
     renderNavigation();
@@ -766,7 +810,8 @@ async function useTemplate(templateId) {
       body: JSON.stringify({ template: templateId }),
     });
     await loadAll(true);
-    state.active = "templates";
+    state.activeSystemTab = "templates";
+    ensureActiveSection();
     setStatus("Template switched", "ok");
   } catch (error) {
     setStatus(error.message, "error");
@@ -799,10 +844,11 @@ function refreshPreview() {
 }
 
 function wireEvents() {
+  systemTabs.querySelectorAll(".system-tab").forEach((tab) => {
+    tab.addEventListener("click", () => setSystemTab(tab.dataset.tab));
+  });
   document.getElementById("reloadBtn").addEventListener("click", () => loadAll(false));
   document.getElementById("saveBtn").addEventListener("click", saveDocument);
-  document.getElementById("exportDocBtn").addEventListener("click", exportDocumentPackage);
-  document.getElementById("importDocBtn").addEventListener("click", chooseDocumentPackage);
   document.getElementById("importDocInput").addEventListener("change", (event) => importDocumentPackage(event.target));
   document.getElementById("renderBtn").addEventListener("click", renderHtml);
   document.getElementById("pdfBtn").addEventListener("click", renderPdf);

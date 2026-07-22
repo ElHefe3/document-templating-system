@@ -111,30 +111,57 @@ button.danger {
   justify-content: flex-end;
 }
 
+.system-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background: #e8ece8;
+  overflow-x: auto;
+}
+
+.system-tab {
+  min-width: 96px;
+  border-color: transparent;
+  background: transparent;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.system-tab.active {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .workspace {
-  height: calc(100vh - 73px);
+  height: calc(100vh - 122px);
   display: grid;
-  grid-template-columns: 148px minmax(380px, 0.96fr) minmax(380px, 1.04fr);
+  grid-template-columns: minmax(420px, 0.96fr) minmax(380px, 1.04fr);
   overflow: hidden;
 }
 
-.sidebar {
-  border-right: 1px solid var(--border);
-  background: #e8ece8;
-  padding: 10px;
-  overflow-y: auto;
+.section-nav {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: #f7f8f5;
+  overflow-x: auto;
 }
 
-.tab {
-  width: 100%;
-  justify-content: flex-start;
-  text-align: left;
+.section-nav[hidden] {
+  display: none;
+}
+
+.section-tab {
   border-color: transparent;
   background: transparent;
-  margin-bottom: 4px;
+  white-space: nowrap;
 }
 
-.tab.active {
+.section-tab.active {
   background: var(--surface);
   border-color: var(--border-strong);
   color: var(--accent);
@@ -339,6 +366,18 @@ textarea.compact {
   background: var(--surface-2);
 }
 
+.file-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.muted-copy {
+  margin: 8px 0 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
 .preview {
   min-width: 0;
   display: grid;
@@ -372,7 +411,7 @@ textarea.compact {
 
 @media (max-width: 1120px) {
   .workspace {
-    grid-template-columns: 132px minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .preview {
@@ -390,24 +429,23 @@ textarea.compact {
     justify-content: flex-start;
   }
 
+  .system-tabs {
+    padding: 8px 10px;
+  }
+
+  .system-tab {
+    min-width: auto;
+  }
+
   .workspace {
     height: auto;
-    min-height: calc(100vh - 132px);
+    min-height: calc(100vh - 176px);
     grid-template-columns: 1fr;
     overflow: visible;
   }
 
-  .sidebar {
-    display: flex;
-    overflow-x: auto;
-    border-right: 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .tab {
-    width: auto;
-    white-space: nowrap;
-    margin: 0 4px 0 0;
+  .section-nav {
+    padding: 8px 10px;
   }
 
   .editor {

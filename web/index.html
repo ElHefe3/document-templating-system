@@ -15,21 +15,22 @@
         <div class="actions">
           <button type="button" id="reloadBtn">Reload</button>
           <button type="button" id="saveBtn" class="secondary">Save Document</button>
-          <button type="button" id="exportDocBtn">Export .dtsdoc</button>
-          <button type="button" id="importDocBtn">Import .dtsdoc</button>
-          <input type="file" id="importDocInput" accept=".dtsdoc" hidden>
           <button type="button" id="renderBtn" class="primary">Render HTML</button>
           <button type="button" id="pdfBtn">Download PDF</button>
         </div>
       </header>
 
-      <div class="workspace">
-        <nav class="sidebar" id="sectionNav" aria-label="Document sections">
-          <button type="button" class="tab" data-section="assets">Assets</button>
-        </nav>
+      <nav class="system-tabs" id="systemTabs" aria-label="Workspace areas">
+        <button type="button" class="system-tab active" data-tab="document">Document</button>
+        <button type="button" class="system-tab" data-tab="files">Files</button>
+        <button type="button" class="system-tab" data-tab="assets">Assets</button>
+        <button type="button" class="system-tab" data-tab="templates">Templates</button>
+      </nav>
 
+      <div class="workspace">
         <main class="editor">
           <div id="status" role="status">Ready</div>
+          <nav class="section-nav" id="sectionNav" aria-label="Document sections"></nav>
           <section id="editorRoot" aria-live="polite"></section>
         </main>
 
@@ -41,6 +42,7 @@
           <iframe id="previewFrame" title="Rendered document preview"></iframe>
         </aside>
       </div>
+      <input type="file" id="importDocInput" accept=".dtsdoc" hidden>
     </div>
 
     <script src="/static/app.js"></script>
