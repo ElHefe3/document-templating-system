@@ -234,8 +234,7 @@ button.danger {
   grid-column: 1 / -1;
 }
 
-label,
-.field-label {
+label {
   color: var(--muted);
   font-weight: 650;
 }
